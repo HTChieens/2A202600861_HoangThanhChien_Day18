@@ -1,9 +1,13 @@
 """Shared configuration for Lab 18."""
 
 import os
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
 
-load_dotenv()
+    load_dotenv()
+except ImportError:
+    # The lab remains runnable in minimal/offline Python environments.
+    pass
 
 # --- API Keys ---
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")

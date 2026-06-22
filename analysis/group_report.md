@@ -1,35 +1,48 @@
-# Group Report — Lab 18: Production RAG
+# Individual Report — Lab 18: Production RAG
 
-**Nhóm:** [Tên]  
-**Ngày:**
+**Sinh viên:** Hoàng Thanh Chiến
+**Hình thức:** Bài tập cá nhân
+**Ngày:** 22/06/2026
 
-## Thành viên & Phân công
+## Module đã hoàn thành
 
-| Tên | Module | Hoàn thành | Tests pass |
-|-----|--------|-----------|-----------|
-| | M1: Chunking | ☐ | /8 |
-| | M2: Hybrid Search | ☐ | /5 |
-| | M3: Reranking | ☐ | /5 |
-| | M4: Evaluation | ☐ | /4 |
+| Sinh viên | Module | Hoàn thành | Tests pass |
+|-----------|--------|------------|-----------:|
+| Hoàng Thanh Chiến | M1: Advanced Chunking | ✓ | 13/13 |
+| Hoàng Thanh Chiến | M2: Hybrid Search | ✓ | 5/5 |
+| Hoàng Thanh Chiến | M3: Reranking | ✓ | 5/5 |
+| Hoàng Thanh Chiến | M4: Evaluation | ✓ | 4/4 |
+| Hoàng Thanh Chiến | M5: Enrichment | ✓ | 10/10 |
+| **Tổng** | | **Hoàn thành** | **37/37** |
 
-## Kết quả RAGAS
+## Kết quả chạy pipeline
+
+- Documents có text layer: 26.
+- PDF scan bị bỏ qua: 2.
+- Hierarchical child chunks: 109.
+- Enriched chunks: 109.
+- Evaluation questions: 20.
+- Pipeline runtime: khoảng 0.4 giây với local fallback.
 
 | Metric | Naive | Production | Δ |
-|--------|-------|-----------|---|
-| Faithfulness | | | |
-| Answer Relevancy | | | |
-| Context Precision | | | |
-| Context Recall | | | |
+|--------|------:|-----------:|--:|
+| Faithfulness | 1.0000 | 1.0000 | +0.0000 |
+| Answer Relevancy | 0.8251 | 0.8774 | +0.0523 |
+| Context Precision | 0.9500 | 0.9750 | +0.0250 |
+| Context Recall | 0.7819 | 0.8765 | +0.0946 |
+
+Các metric là lexical proxy vì runtime hiện tại không có `datasets`, RAGAS,
+Qdrant client, Sentence Transformers và model weights. Vì vậy chúng phù hợp để
+so sánh hai cấu hình trong cùng môi trường, không thay thế điểm RAGAS chính thức.
 
 ## Key Findings
 
-1. **Biggest improvement:**
-2. **Biggest challenge:**
-3. **Surprise finding:**
+1. **Biggest win:** Pipeline chạy end-to-end dù thiếu dịch vụ ML nhờ fallback cho semantic chunking, dense retrieval, reranking, enrichment và evaluation.
+2. **Biggest challenge:** Câu hỏi multi-hop và câu hỏi có số tiền/ngưỡng ngày vẫn dễ lexical collision.
+3. **Surprise finding:** Parent retrieval cùng enrichment cải thiện context recall thêm 0.0946 so với baseline ngay cả trong local fallback.
 
-## Presentation Notes (5 phút)
+## Kết luận
 
-1. RAGAS scores (naive vs production):
-2. Biggest win — module nào, tại sao:
-3. Case study — 1 failure, Error Tree walkthrough:
-4. Next optimization nếu có thêm 1 giờ:
+Kiến trúc production đã đầy đủ M1→M5 và 37/37 tests pass. Bước tiếp theo là sửa
+Python environment, chạy Qdrant + BGE-M3 + BGE reranker thật, dùng OpenAI cho
+generation/RAGAS, sau đó so sánh lại với cùng test set.
